@@ -11,9 +11,6 @@ export default defineConfig({
       formats: ["es"],
       fileName: "hello-world",
     },
-    rollupOptions: {
-      external: ["svelte"],
-    },
     sourcemap: true,
   },
   plugins: [
