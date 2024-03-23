@@ -7,6 +7,7 @@ export default defineConfig([
     format: "esm",
     minify: false,
     dts: true,
+    sourcemap: true,
   },
   {
     entry: ["src/hello-world.ts"],
@@ -14,6 +15,7 @@ export default defineConfig([
     format: "esm",
     minify: true,
     dts: false,
+    sourcemap: true,
     outExtension: () => ({
       js: ".min.js",
     }),
@@ -24,6 +26,7 @@ export default defineConfig([
     format: "esm",
     minify: false,
     dts: false,
+    sourcemap: true,
     noExternal: ["lit"],
     outExtension: () => ({
       js: ".noExternal.js",
@@ -35,6 +38,7 @@ export default defineConfig([
     format: "esm",
     minify: true,
     dts: false,
+    sourcemap: true,
     noExternal: ["lit"],
     outExtension: () => ({
       js: ".noExternal.min.js",
