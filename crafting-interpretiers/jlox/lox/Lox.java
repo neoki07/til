@@ -3,8 +3,6 @@ package com.craftinginterpreters.lox;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -12,7 +10,6 @@ import java.util.List;
 
 public class Lox {
     static boolean hadError = false;
-    static Logger logger = System.getLogger("lox");
 
     public static void main(String[] args) throws IOException {
         if (args.length > 1) {
@@ -50,14 +47,14 @@ public class Lox {
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.scanTokens();
 
-        logger.log(Level.INFO, "tokens: " + tokens.toString());
+        Logger.print("tokens: " + tokens.toString());
 
         Parser parser = new Parser(tokens);
         Expr expression = parser.parse();
 
         if (hadError) return;
 
-        logger.log(Level.INFO, "ast: " + new AstPrinter().print(expression));
+        Logger.print("ast: " + new AstPrinter().print(expression));
         System.out.println(new AstPrinter().print(expression));
     }
 

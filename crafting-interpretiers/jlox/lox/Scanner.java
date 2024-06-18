@@ -42,6 +42,7 @@ public class Scanner {
     List<Token> scanTokens() {
         while (!isAtEnd()) {
             start = current;
+            Logger.print("start: " + start + " current: " + current + " line: " + line);
             scanToken();
         }
 
@@ -51,33 +52,99 @@ public class Scanner {
 
     private void scanToken() {
         char c = advance();
+        Logger.print("char: '" + (c == '\n' ? "\\n" : c) + "'");
+
+        char next = peek();
+
         switch (c) {
-            case '(': addToken(LEFT_PAREN); break;
-            case ')': addToken(RIGHT_PAREN); break;
-            case '{': addToken(LEFT_BRACE); break;
-            case '}': addToken(RIGHT_BRACE); break;
-            case ',': addToken(COMMA); break;
-            case '.': addToken(DOT); break;
-            case '-': addToken(MINUS); break;
-            case '+': addToken(PLUS); break;
-            case ';': addToken(SEMICOLON); break;
-            case '*': addToken(STAR); break;
+            case '(':
+                Logger.print("'" + c + "' is a LEFT_PAREN token.");
+                addToken(LEFT_PAREN);
+                break;
+            case ')':
+                Logger.print("'" + c + "' is a RIGHT_PAREN token.");
+                addToken(RIGHT_PAREN);
+                break;
+            case '{':
+                Logger.print("'" + c + "' is a LEFT_BRACE token.");
+                addToken(LEFT_BRACE);
+                break;
+            case '}':
+                Logger.print("'" + c + "' is a RIGHT_BRACE token.");
+                addToken(RIGHT_BRACE);
+                break;
+            case ',':
+                Logger.print("'" + c + "' is a COMMA token.");
+                addToken(COMMA);
+                break;
+            case '.':
+                Logger.print("'" + c + "' is a DOT token.");
+                addToken(DOT);
+                break;
+            case '-':
+                Logger.print("'" + c + "' is a MINUS token.");
+                addToken(MINUS);
+                break;
+            case '+':
+                Logger.print("'" + c + "' is a PLUS token.");
+                addToken(PLUS);
+                break;
+            case ';':
+                Logger.print("'" + c + "' is a SEMICOLON token.");
+                addToken(SEMICOLON);
+                break;
+            case '*':
+                Logger.print("'" + c + "' is a STAR token.");
+                addToken(STAR);
+                break;
             case '!':
+                Logger.print("next char: '" + next + "'");
+                if (match('=')) {
+                    Logger.print("'" + c + next + "' is a BANG_EQUAL token.");
+                } else {
+                    Logger.print("'" + c + "' is a BANG token.");
+                }
+
                 addToken(match('=') ? BANG_EQUAL : BANG);
                 break;
             case '=':
+                Logger.print("next char: '" + next + "'");
+                if (match('=')) {
+                    Logger.print("'" + c + next + "' is a EQUAL_EQUAL token.");
+                } else {
+                    Logger.print("'" + c + "' is a EQUAL token.");
+                }
+
                 addToken(match('=') ? EQUAL_EQUAL : EQUAL);
                 break;
             case '<':
+                Logger.print("next char: '" + next + "'");
+                if (next == '=') {
+                    Logger.print("'" + c + next + "' is a LESS_EQUAL token.");
+                } else {
+                    Logger.print("'" + c + "' is a LESS token.");
+                }
+
                 addToken(match('=') ? LESS_EQUAL : LESS);
                 break;
             case '>':
+                Logger.print("next char: '" + next + "'");
+                if (next == '=') {
+                    Logger.print("'" + c + next + "' is a GREATER_EQUAL token.");
+                } else {
+                    Logger.print("'" + c + "' is a GREATER token.");
+                }
+
                 addToken(match('=') ? GREATER_EQUAL : GREATER);
                 break;
             case '/':
+                Logger.print("next char: '" + next + "'");
                 if (match('/')) {
+                    Logger.print("'" + c + next + "' is a COMMENT token.");
+                    Logger.print("Skipping comment.");
                     while (peek() != '\n' && !isAtEnd()) advance();
                 } else {
+                    Logger.print("'" + c + "' is a SLASH token.");
                     addToken(SLASH);
                 }
                 break;
@@ -86,9 +153,12 @@ public class Scanner {
             case '\t':
                 break;
             case '\n':
+                Logger.print("'\\n' is a NEWLINE token.");
                 line++;
                 break;
-            case '"': string(); break;
+            case '"':
+                string();
+                break;
             default:
                 if (isDigit(c)) {
                     number();
@@ -108,6 +178,8 @@ public class Scanner {
         String text = source.substring(start, current);
         TokenType type = keywords.get(text);
         if (type == null) type = IDENTIFIER;
+
+        Logger.print("'" + text + "' is a " + (type.equals(IDENTIFIER) ? "IDENTIFIER" : type) + " token.");
         addToken(type);
     }
 
@@ -119,6 +191,8 @@ public class Scanner {
 
             while (isDigit(peek())) advance();
         }
+
+        Logger.print("'" + source.substring(start, current) + "' is a NUMBER token.");
 
         addToken(NUMBER,
                 Double.parseDouble(source.substring(start, current)));
@@ -138,6 +212,7 @@ public class Scanner {
         advance();
 
         String value = source.substring(start + 1, current - 1);
+        Logger.print("'" + value + "' is a STRING token.");
         addToken(STRING, value);
     }
 
@@ -161,7 +236,7 @@ public class Scanner {
 
     private boolean isAlpha(char c) {
         return (c >= 'a' && c <= 'z') ||
-               (c >= 'A' && c <= 'X') ||
+                (c >= 'A' && c <= 'X') ||
                 c == '_';
     }
 
