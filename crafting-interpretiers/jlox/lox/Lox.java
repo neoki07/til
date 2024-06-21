@@ -53,14 +53,14 @@ public class Lox {
         Logger.print("tokens: " + tokens.toString());
 
         Parser parser = new Parser(tokens);
-        Expr expression = parser.parse();
+        List<Stmt> statements = parser.parse();
 
         if (hadError) return;
 
-        interpreter.interpret(expression);
+        interpreter.interpret(statements);
 
-        Logger.print("ast: " + new AstPrinter().print(expression));
-        System.out.println(new AstPrinter().print(expression));
+//        Logger.print("ast: " + new AstPrinter().print(expression));
+//        System.out.println(new AstPrinter().print(expression));
     }
 
     static void error(int line, String message) {
